@@ -1,6 +1,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
+const { addDays } = require('../utils/common');
 
 class HomeController extends Controller {
   async report() {
@@ -54,12 +55,8 @@ class HomeController extends Controller {
   }
 
   async getDayStatics() {
-    let lastDay = +new Date(this.ctx.query.date) - 24 * 3600 * 1000;
-    lastDay = new Date(lastDay);
-    lastDay = lastDay.getFullYear() + '-' + (lastDay.getMonth() + 1) + '-' + lastDay.getDate();
-    let lastWeek = +new Date(this.ctx.query.date) - 7 * 24 * 3600 * 1000;
-    lastWeek = new Date(lastWeek);
-    lastWeek = lastWeek.getFullYear() + '-' + (lastWeek.getMonth() + 1) + '-' + lastWeek.getDate();
+    let lastDay = addDays(this.ctx.query.date, -1);
+    let lastWeek = addDays(this.ctx.query.date, -7);
 
     this.ctx.body = {
       today: await this.ctx.service.clientService.getIntegrateByDate(this.ctx.query.date),
